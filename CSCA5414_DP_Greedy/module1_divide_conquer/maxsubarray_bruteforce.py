@@ -1,3 +1,4 @@
+import timeit
 stock_price_changes = [13, -3, -25, 20, -3, -16, -23, 18, 20, -7, 12, -5, -22, 15, -4, 7]
 
 def max_subarray_bruteforce(arr):
@@ -15,3 +16,5 @@ def max_subarray_bruteforce(arr):
     return max_sum, max_left, max_right
 max_sum, max_left, max_right = max_subarray_bruteforce(stock_price_changes)
 print(max_sum, max_left, max_right)
+t = timeit.timeit(lambda: max_subarray_bruteforce(stock_price_changes), number=1000)
+print(t / 1000, "seconds per run")
