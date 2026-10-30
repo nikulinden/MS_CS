@@ -6,9 +6,7 @@ def max_subarray_bruteforce(arr):
     max_right = 0
     for i in range(len(arr)):
         current_sum = 0
-        for j in range(len(arr)):
-            if j < i:
-                continue
+        for j in range(i, len(arr)):
             current_sum = current_sum + arr[j]
             if current_sum > max_sum:
                 max_sum = current_sum
