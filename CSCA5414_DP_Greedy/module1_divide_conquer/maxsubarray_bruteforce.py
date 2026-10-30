@@ -1,5 +1,7 @@
 import timeit
-stock_price_changes = [13, -3, -25, 20, -3, -16, -23, 18, 20, -7, 12, -5, -22, 15, -4, 7]
+import random
+# stock_price_changes = [13, -3, -25, 20, -3, -16, -23, 18, 20, -7, 12, -5, -22, 15, -4, 7]
+stock_price_changes = [random.randint(-100, 100) for _ in range(100)]
 
 def max_subarray_bruteforce(arr):
     max_sum = float('-inf')
