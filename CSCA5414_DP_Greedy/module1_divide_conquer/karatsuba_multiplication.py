@@ -30,15 +30,15 @@ def bitwise_add (bit_a, bit_b, carry_in):
 
 def add(binary_a, binary_b):
     (size_a, size_b) = len(binary_a), len(binary_b)
-    carry_in = 0
+    carry = 0
     binary_sum = []
     for bit_position in range(max(size_a, size_b)):
         bit_a = binary_a[bit_position] if bit_position < size_a else 0
         bit_b = binary_b[bit_position] if bit_position < size_b else 0
-        (sum_bit, carry_out) = bitwise_add(bit_a, bit_b, carry_in)
+        (sum_bit, carry) = bitwise_add(bit_a, bit_b, carry)
         binary_sum.append(sum_bit)
-    if carry_out == 1:
-        binary_sum.append(carry_out)
+    if carry == 1:
+        binary_sum.append(carry)
     return binary_sum
 
 def subtract(binary_a, binary_b):
@@ -61,13 +61,13 @@ def subtract(binary_a, binary_b):
               -> drop extra carry -> 0011 = 3
     """
     size_a = len(binary_a)
-    complement_size = len(binary_a) - len(binary_b)
-    flipped_b = []
-    for bit_b in binary_b: # 1 & 2
-        flipped_b.append(1-bit_b)
-    padded_flipped_b = flipped_b + [1]*complement_size
-    b_twos_complement = add(padded_flipped_b, [1]) #3
-    answer = add(binary_a, b_twos_complement)
-    return answer[0:size_a]
+    padding_size = len(binary_a) - len(binary_b)
+    padded_b = binary_b + [0]*padding_size # 1
+    flipped_padded_b = []
+    for bit_b in padded_b: # 2
+        flipped_padded_b.append(1-bit_b)
+    b_twos_complement = add(flipped_padded_b, [1]) #3
+    answer = add(binary_a, b_twos_complement) #4
+    return answer[0:size_a] #5
     
 
