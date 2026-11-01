@@ -71,3 +71,32 @@ def subtract(binary_a, binary_b):
     return answer[0:size_a] #5
     
 
+def grade_school_multiplication(binary_a, binary_b):
+    """
+    Multiply a and b using grade-school (long) multiplication in binary.
+    Bits are stored least-significant first (index i is worth 2**i).
+    Idea: same as decimal long multiplication, but each digit of b is
+    0 or 1, so each row is either a shifted copy of a, or nothing.
+    Recipe:
+      1. Start with result = 0 and shifted_a = a.
+      2. For each bit of b, lowest first:
+           - if the bit is 1, add shifted_a to the result;
+           - shift shifted_a one place up (put a 0 at the FRONT of
+             the list), which multiplies it by 2, ready for the next bit.
+      3. Return the result.
+    Example (values written normally, most-significant bit first):
+      5 x 3:   101          (5)
+             x  11          (3)
+               101   bit 1 -> add a            (5)
+              1010   bit 1 -> add a shifted    (10)
+              ----
+              1111                              (15)
+    Running time: up to n additions of about n bits each -> Theta(n^2).
+    """
+    shifted_a = binary_a
+    result = [0]
+    for bit_b in binary_b:
+        if bit_b == 1:
+            result = add(result, shifted_a)
+        shifted_a = [0] + shifted_a
+    return result
