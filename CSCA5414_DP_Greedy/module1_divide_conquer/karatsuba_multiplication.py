@@ -33,8 +33,8 @@ def add(binary_a, binary_b):
     carry_in = 0
     binary_sum = []
     for bit_position in range(max(size_a, size_b)):
-        bit_a = binary_a[bit_position] if bit_position < size_b else 0
-        bit_b = binary_b[bit_position] if bit_position < size_a else 0
+        bit_a = binary_a[bit_position] if bit_position < size_a else 0
+        bit_b = binary_b[bit_position] if bit_position < size_b else 0
         (sum_bit, carry_out) = bitwise_add(bit_a, bit_b, carry_in)
         binary_sum.append(sum_bit)
     if carry_out == 1:
