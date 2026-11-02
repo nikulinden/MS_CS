@@ -101,6 +101,9 @@ def grade_school_multiplication(binary_a, binary_b):
         shifted_a = [0] + shifted_a
     return result
 
+def pad(binary_number, shift_by):
+    return [0]*shift_by + binary_number
+
 def karatsuba_multiply (binary_a, binary_b):
     """
     Multiply a and b using Karatsuba's divide-and-conquer algorithm.
@@ -148,8 +151,24 @@ def karatsuba_multiply (binary_a, binary_b):
     if size_a <= 2 or size_b <=2:
         return grade_school_multiplication(binary_a, binary_b)
     else:
-        middle_point = size_a // 2
-        a_low_half = binary_a[0:middle_point]
-        a_high_half = binary_a[middle_point:]
-        b_low_half = binary_b[0:middle_point]
-        b_high_half = binary_b[middle_point:]
+        split = size_a // 2
+        a_low = binary_a[0:split]
+        a_high = binary_a[split:]
+        b_low = binary_b[0:split]
+        b_high = binary_b[split:]
+        
+        # 3 recursive calls to multiply
+        low_product = karatsuba_multiply(a_low, b_low)
+        high_product = karatsuba_multiply(a_high, b_high)
+        sum_product = karatsuba_multiply(add(a_low, a_high), add(b_low, b_high))
+        
+        # get the middle part by subtracting the redundant parts (Karatsuba trick)
+        sum_product_minus_low = subtract(sum_product, low_product)
+        middle_result = subtract(sum_product_minus_low, high_product)
+        
+        # pad by 2m and m
+        padded_high_product = pad(high_product, 2*split)
+        padded_middle_result = pad(middle_result, split)
+
+        result = add(add(padded_high_product, padded_middle_result), low_product)
+        return result
