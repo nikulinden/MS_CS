@@ -100,3 +100,56 @@ def grade_school_multiplication(binary_a, binary_b):
             result = add(result, shifted_a)
         shifted_a = [0] + shifted_a
     return result
+
+def karatsuba_multiply (binary_a, binary_b):
+    """
+    Multiply a and b using Karatsuba's divide-and-conquer algorithm.
+    Bits are stored least-significant first (index i is worth 2**i),
+    so the LOW half of a number is the FIRST part of its list.
+    Idea: split each number into a low half and a high half at the
+    same position m:
+        a = a_high * 2**m + a_low
+        b = b_high * 2**m + b_low
+    Multiplying out needs four products:
+        a * b = (a_high*b_high) * 2**(2m)
+              + (a_high*b_low + a_low*b_high) * 2**m
+              + (a_low*b_low)
+    Trick: get the middle part with ONE multiplication instead of two:
+        (a_low + a_high) * (b_low + b_high)
+            = a_low*b_low + [a_low*b_high + a_high*b_low] + a_high*b_high
+        so  middle = sum_product - low_product - high_product
+    Recipe:
+      1. Base case: if either number has 2 bits or fewer,
+         use grade-school multiplication.
+      2. Split a and b at the same position m into low and high halves.
+      3. Three recursive calls:
+           low_product  = a_low  * b_low
+           high_product = a_high * b_high
+           sum_product  = (a_low + a_high) * (b_low + b_high)
+      4. middle = sum_product - low_product - high_product
+      5. Recombine:
+           result = high_product shifted up by 2m
+                  + middle       shifted up by m
+                  + low_product
+         (shifting up by k = putting k zeros at the FRONT of the list)
+
+    Example (decimal, split after 1 digit, so shifts are powers of 10):
+      12 x 34:  a_high=1, a_low=2, b_high=3, b_low=4
+        low_product  = 2*4 = 8
+        high_product = 1*3 = 3
+        sum_product  = (2+1)*(4+3) = 21
+        middle       = 21 - 8 - 3 = 10
+        result       = 3*100 + 10*10 + 8 = 408
+
+    Running time: 3 half-size multiplications + Theta(n) work to combine:
+        T(n) = 3T(n/2) + Theta(n)  ->  Theta(n^(lg 3)) ~ Theta(n^1.585)
+    """
+    (size_a, size_b) = len(binary_a), len(binary_b)
+    if size_a <= 2 or size_b <=2:
+        return grade_school_multiplication(binary_a, binary_b)
+    else:
+        middle_point = size_a // 2
+        a_low_half = binary_a[0:middle_point]
+        a_high_half = binary_a[middle_point:]
+        b_low_half = binary_b[0:middle_point]
+        b_high_half = binary_b[middle_point:]
