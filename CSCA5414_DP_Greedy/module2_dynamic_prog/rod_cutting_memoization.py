@@ -19,9 +19,18 @@ def maxRevenueMemoizeTopDown(L, sizes, prices, memo):
     return max_value_sofar    
 
 
-def maxRevenueMemoizeBottonUpNoRecursion():
+def best_table(length, sizes, prices):
+    # bottom up no recursion using T table
+    table = [0]*(length + 1)
+
+    for l in range(1, length + 1):
+        options = [0]
+        for i in range(len(sizes)):
+            if l - sizes[i] >= 0:
+                options.append(prices[i] + table[l - sizes[i]])
+        table[l] = max(options)
     
+    return table[l]
 
-
-
-print(maxRevenueMemoizeTopDown(L, sizes, prices, memo))
+print(f"This is top down: {maxRevenueMemoizeTopDown(L, sizes, prices, memo)}")
+print(f"This is bottom up: {best_table(L, sizes, prices)}")
